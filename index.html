@@ -184,7 +184,7 @@
 
                     <div class="row mt-2">
                         <div class="col d-flex justify-content-between">
-                            <button type="button" class="btn btn-primary" @click="etapa = 1"> Repetir pedido </button>
+                            <button type="button" class="btn btn-primary" @click="repetirPedido"> Repetir pedido </button>
                             <button type="button" class="btn btn-success" @click="novoPedido"> Fazer novo pedido </button>
                         </div>
                     </div>
@@ -207,7 +207,8 @@
                 etapa: 1,
                 inputNome: '',
                 inputEndereco: '',
-                contagem: 10
+                contagem: 10,
+                intervalo: null
             },
 
             computed: {
@@ -279,44 +280,67 @@
             },
 
             methods: {
-                fazerPedido() {
-                    if(this.inputTipoPao && this.inputHamburguer) {
-                        this.etapa = 2;
-                    } else {
-                        alert('Você precisa selecionar um tipo de pão e hambúrguer')
-                    }
-                },
+    fazerPedido() {
+        if (this.inputTipoPao && this.inputHamburguer) {
+            this.etapa = 2
+        } else {
+            alert('Você precisa selecionar um tipo de pão e hambúrguer')
+        }
+    },
 
-                confirmarPedido() {
-                    if (this.inputNome && this.inputEndereco) {
-                    this.etapa = 3
+    confirmarPedido() {
+        if (this.inputNome && this.inputEndereco) {
+            this.etapa = 3;
 
-                    this.contagem = 10
-                    const intervalo = setInterval(() => {
-                        if (this.contagem > 0) {
-                            this.contagem -= 1;
-                        } else {
-                            clearInterval(intervalo)
-                            this.novoPedido()
-                        }
-                    }, 1000)
-                } else {
-                    alert('As informações estão incompletas')
-                }
-                },
+            this.iniciarContador()
+        } else {
+            alert('As informações estão incompletas')
+        }
+    },
 
-                novoPedido() {
-                    this.etapa = 1
-                    this.inputTipoPao = ''
-                    this.inputSalada = []
-                    this.inputMolho = []
-                    this.inputHamburguer = ''
-                    this.inputNome = ''
-                    this.inputEndereco = ''
-                    this.contagem = 10
-                }
+    iniciarContador() {
+        this.contagem = 10;
+
+        if (this.intervalo) {
+            clearInterval(this.intervalo);
+        }
+
+        this.intervalo = setInterval(() => {
+            if (this.contagem > 0) {
+                this.contagem -= 1
+            } else {
+                clearInterval(this.intervalo)
+                this.novoPedido()
             }
-        })
+        }, 1000)
+    },
+
+    novoPedido() {
+        if (this.intervalo) {
+            clearInterval(this.intervalo)
+        }
+
+        this.etapa = 1
+        this.inputTipoPao = ''
+        this.inputSalada = []
+        this.inputMolho = []
+        this.inputHamburguer = ''
+        this.inputNome = ''
+        this.inputEndereco = ''
+        this.contagem = 10
+    },
+
+    repetirPedido() {
+        if (this.intervalo) {
+            clearInterval(this.intervalo)
+        }
+
+        this.etapa = 1
+    }
+}
+})
+
+
     </script>
 
 </body>
